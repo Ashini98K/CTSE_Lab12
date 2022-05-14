@@ -1,0 +1,5 @@
+{
+  "yaml.schemas": {
+    "kubernetes://schema/v1@service": "file:///d%3A/4th%20year%20Semester%2001/CTSE/Week12/Lab12-CICD/CTSE_Lab12/k8s/service.yaml"
+  }
+}
