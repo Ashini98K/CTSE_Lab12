@@ -3,8 +3,8 @@ kind: Deployment
 metadata:
   generation: 1
   labels:
-    app: ctse-lab-12
-  name: ctse-lab-12
+    app: ctse-lab
+  name: ctse-lab
   namespace: default
 spec:
   progressDeadlineSeconds: 600
@@ -12,7 +12,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: ctse-lab-12
+      app: ctse-lab
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -22,10 +22,10 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        app: ctse-lab-12
+        app: ctse-lab
     spec:
       containers:
-        - image: ashini98/ctse-lab12
+        - image: ashini98/ctse-lab12:f627f064862a2d59aa92f3dd8d4857c4427136de
           imagePullPolicy: Always
           name: ctse-lab12
           resources: {}
