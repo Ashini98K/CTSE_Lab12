@@ -1,6 +1,6 @@
 FROM node:16-alpine
 
-RUN  npm i -g ts-node typescript
+RUN  npm i -g express
 
 WORKDIR /app
 
@@ -11,5 +11,5 @@ RUN npm install
 
 # upto 10 th line what we does is building the image
 
-EXPOSE 8081
+EXPOSE 3000
 CMD [ "node", "index.js" ]
