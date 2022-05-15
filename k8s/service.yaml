@@ -3,14 +3,12 @@ kind: Service
 metadata:
   creationTimestamp: null
   labels:
-    app: ctse-lab-new
-  name: ctse-lab-new
+    app: ctse-lab-newn
+  name: ctse-lab-newn
 spec:
   ports:
-    - port: 3000
-      protocol: TCP
-      targetPort: 3000
+    - protocol: TCP
+      port: 3000
   selector:
-    app: ctse-lab-new
-status:
-  loadBalancer: {}
+    app: ctse-lab-newn
+  type: LoadBalancer

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ctse-lab-newn
+spec:
+  selector:
+    matchLabels:
+      app: ctse-lab-newn
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: ctse-lab-newn
+    spec:
+      containers:
+        - name: ctse-lab-newn
+          image: ashini98/ctse-lab12:{{tag}}
+          ports:
+            - containerPort: 3000

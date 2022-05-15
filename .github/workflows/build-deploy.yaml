@@ -4,6 +4,12 @@ on:
   push:
     branches: [main]
 
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: test-1 # TODO: update to cluster name
+  GKE_ZONE: us-central1 # TODO: update to cluster zone
+  DEPLOYMENT_NAME: ctse-lab-newn # TODO: update deployment name if changed in deployment.yaml
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,9 +32,33 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/ctse-lab12:${{ github.sha }}
+      - name: Update config files in k8s
+        run: sed -i.bak 's/{{tag}}/${{ github.sha }}/g' k8s/deploy.yaml && rm k8s/*.bak
 
-      - uses: actions-hub/kubectl@master
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        # Configure Workload Identity Federation and generate an access token.
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v0"
         with:
-          args: get namespaces
+          workload_identity_provider: "projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider"
+          service_account: "my-service-account@my-project.iam.gserviceaccount.com"
+
+      # Setup gcloud CLI
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+
+      # Get the GKE credentials so we can deploy to the cluster
+      - run: |-
+          gcloud container clusters get-credentials "$GKE_CLUSTER" --region "$GKE_ZONE" --project "$PROJECT_ID"
+      # Deploy sample image to the GKE cluster
+      - name: Deploy
+        run: |-
+          kubectl apply -f deployment.yml
+          kubectl rollout status deployment/$DEPLOYMENT_NAME
+          kubectl get services -o wide
+
+      # - uses: actions-hub/kubectl@master
+      #   env:
+      #     KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      #   with:
+      #     args: get namespaces
